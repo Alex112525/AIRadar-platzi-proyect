@@ -1,0 +1,116 @@
+{
+  "version": "1.0",
+  "snapshot_date": "2026-09-14",
+  "generated_at": "2026-09-14T21:10:00Z",
+  "item_count": 9,
+  "items": [
+    {
+      "id": "2026-09-14-openai-responses-batch",
+      "title": "Batch processing for the Responses API",
+      "url": "https://openai.com/index/batch-processing-responses-api/",
+      "source": "OpenAI Blog",
+      "source_type": "blog_oficial",
+      "category": "api",
+      "published_at": "2026-09-14T17:30:00Z",
+      "collected_at": "2026-09-14T21:04:00Z",
+      "summary": "La API de respuestas acepta envíos por lotes con resultados diferidos y un precio menor por token que las llamadas en línea.",
+      "tags": ["api", "costos", "openai"]
+    },
+    {
+      "id": "2026-09-14-anthropic-changelog-limites-de-lote",
+      "title": "Message Batches API: higher queue limits",
+      "url": "https://docs.anthropic.com/en/release-notes/api",
+      "source": "Anthropic Changelog",
+      "source_type": "changelog",
+      "category": "api",
+      "published_at": "2026-09-14T16:05:00Z",
+      "collected_at": "2026-09-14T21:04:00Z",
+      "summary": "El changelog reporta límites más altos de cola para la API de lotes y un nuevo campo de estado por solicitud dentro del lote.",
+      "tags": ["api", "lotes", "anthropic"]
+    },
+    {
+      "id": "2026-09-14-google-deepmind-gemini-contexto-largo",
+      "title": "Updating Gemini for long-context retrieval tasks",
+      "url": "https://deepmind.google/discover/blog/updating-gemini-for-long-context-retrieval-tasks/",
+      "source": "Google DeepMind Blog",
+      "source_type": "blog_oficial",
+      "category": "modelo",
+      "published_at": "2026-09-14T14:20:00Z",
+      "collected_at": "2026-09-14T21:04:00Z",
+      "summary": "Actualización de la familia Gemini orientada a tareas de recuperación sobre contextos largos, con nuevas cifras de latencia publicadas por el equipo.",
+      "tags": ["modelo", "contexto-largo", "google"]
+    },
+    {
+      "id": "2026-09-14-openai-guia-de-evaluaciones",
+      "title": "A practical guide to running evals",
+      "url": "https://openai.com/index/a-practical-guide-to-running-evals/",
+      "source": "openai blog",
+      "source_type": "blog_oficial",
+      "category": "producto",
+      "published_at": "2026-09-14T12:00:00Z",
+      "collected_at": "2026-09-14T21:04:00Z",
+      "summary": "Guía del panel de evaluaciones de la plataforma: cómo armar conjuntos de prueba y comparar versiones de un mismo prompt.",
+      "tags": ["evaluaciones", "producto", "openai"]
+    },
+    {
+      "id": "2026-09-14-vllm-release-v0-11-0",
+      "title": "vLLM v0.11.0",
+      "url": "https://github.com/vllm-project/vllm/releases/tag/v0.11.0",
+      "source": "GitHub · vllm-project/vllm",
+      "source_type": "repositorio",
+      "category": "herramienta_open_source",
+      "published_at": "2026-09-14T10:45:00Z",
+      "collected_at": "2026-09-14T21:04:00Z",
+      "summary": "",
+      "tags": ["inferencia", "open-source"]
+    },
+    {
+      "id": "2026-09-14-hugging-face-transformers-v5-1",
+      "title": "Transformers v5.1: faster loading for sharded checkpoints",
+      "url": "https://huggingface.co/blog/transformers-v5-1",
+      "source": "Hugging Face Blog",
+      "source_type": "blog_oficial",
+      "category": "herramienta_open_source",
+      "published_at": "2026-09-14T08:15:00Z",
+      "collected_at": "2026-09-14T21:04:00Z",
+      "summary": "La versión 5.1 de transformers reduce el tiempo de carga de checkpoints repartidos en varios archivos y ajusta la API de cuantización.",
+      "tags": ["open-source", "biblioteca", "hugging-face"]
+    },
+    {
+      "id": "2026-09-13-mistral-small-3-2",
+      "title": "Mistral Small 3.2",
+      "url": "https://mistral.ai/news/mistral-small-3-2/",
+      "source": "Mistral AI News",
+      "source_type": "blog_oficial",
+      "category": "modelo",
+      "published_at": "2026-09-13T16:40:00Z",
+      "collected_at": "2026-09-14T21:04:00Z",
+      "summary": "Nueva versión del modelo pequeño de Mistral, publicada con pesos abiertos y enfocada en llamadas a herramientas.",
+      "tags": ["modelo", "pesos-abiertos", "mistral"]
+    },
+    {
+      "id": "2026-09-13-ue-calendario-reglamento-ia",
+      "title": "Comunicación sobre el calendario de aplicación del Reglamento de IA",
+      "url": "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=OJ:C_202605412",
+      "source": "Diario Oficial de la UE",
+      "source_type": "boletin_regulatorio",
+      "category": "regulacion",
+      "published_at": "2026-09-13T09:00:00Z",
+      "collected_at": "2026-09-14T21:04:00Z",
+      "summary": "",
+      "tags": ["regulacion", "union-europea"]
+    },
+    {
+      "id": "2026-09-13-import-ai-evaluacion-de-agentes",
+      "title": "Import AI 421: measuring agents over long horizons",
+      "url": "https://importai.substack.com/p/import-ai-421",
+      "source": "Import AI",
+      "source_type": "newsletter",
+      "category": "investigacion",
+      "published_at": "2026-09-13T07:00:00Z",
+      "collected_at": "2026-09-14T21:04:00Z",
+      "summary": "Reseña de un trabajo sobre cómo medir agentes en tareas de horizonte largo y por qué los promedios por tarea esconden los fallos acumulados.",
+      "tags": ["investigacion", "agentes", "evaluacion"]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Alex112525/AIRadar-platzi-proyect/schemas/snapshot.schema.json",
+  "title": "snapshot diario",
+  "description": "Foto de un dia del radar: metadatos mas la lista de noticias recolectadas. Definicion en prosa: docs/contrato-de-datos.md",
+  "type": "object",
+  "required": [
+    "version",
+    "snapshot_date",
+    "generated_at",
+    "item_count",
+    "items"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Version del contrato de datos con la que se genero el snapshot.",
+      "const": "1.0"
+    },
+    "snapshot_date": {
+      "type": "string",
+      "description": "Dia que cubre el snapshot. Debe coincidir con el nombre del archivo.",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Momento en que se cerro el snapshot, en UTC."
+    },
+    "item_count": {
+      "type": "integer",
+      "description": "Numero de entradas en items.",
+      "minimum": 1
+    },
+    "items": {
+      "type": "array",
+      "description": "Noticias del dia, ordenadas por published_at descendente.",
+      "minItems": 1,
+      "items": {
+        "$ref": "noticia.schema.json"
+      }
+    }
+  }
+}

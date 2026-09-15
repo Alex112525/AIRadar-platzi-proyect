@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Alex112525/AIRadar-platzi-proyect/schemas/noticia.schema.json",
+  "title": "noticia",
+  "description": "Una noticia o lanzamiento de inteligencia artificial recolectado de una fuente del catalogo. Definicion en prosa: docs/contrato-de-datos.md",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "url",
+    "source",
+    "source_type",
+    "category",
+    "published_at",
+    "collected_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Identificador estable y unico dentro del snapshot, con el patron YYYY-MM-DD-fuente-titulo-corto.",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+$",
+      "minLength": 12
+    },
+    "title": {
+      "type": "string",
+      "description": "Titulo en el idioma original, sin editar.",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "url": {
+      "type": "string",
+      "description": "Enlace canonico a la publicacion original, sin parametros de seguimiento.",
+      "minLength": 1
+    },
+    "source": {
+      "type": "string",
+      "description": "Nombre de la fuente tal como aparece en el catalogo de fuentes.",
+      "minLength": 1
+    },
+    "source_type": {
+      "type": "string",
+      "description": "Tipo de fuente.",
+      "enum": [
+        "blog_oficial",
+        "changelog",
+        "repositorio",
+        "newsletter",
+        "boletin_regulatorio"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "description": "Categoria tematica de la noticia, segun el catalogo del contrato de datos.",
+      "minLength": 1
+    },
+    "published_at": {
+      "type": "string",
+      "description": "Fecha y hora de publicacion en UTC, con el formato YYYY-MM-DDTHH:MM:SSZ.",
+      "minLength": 20
+    },
+    "collected_at": {
+      "type": "string",
+      "description": "Fecha y hora de recoleccion en UTC, con el formato YYYY-MM-DDTHH:MM:SSZ.",
+      "minLength": 20
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumen propio en espanol, una o dos frases.",
+      "maxLength": 280
+    },
+    "tags": {
+      "type": "array",
+      "description": "Etiquetas libres en minusculas para filtrar despues.",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  }
+}
