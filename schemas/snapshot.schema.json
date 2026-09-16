@@ -2,43 +2,86 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/Alex112525/AIRadar-platzi-proyect/schemas/snapshot.schema.json",
   "title": "snapshot diario",
-  "description": "Foto de un dia del radar: metadatos mas la lista de noticias recolectadas. Definicion en prosa: docs/contrato-de-datos.md",
+  "description": "Foto de un dia del radar: metadatos, noticias y registro de deduplicacion. Cada elemento de items se valida por composicion con ./noticia.schema.json. Definicion en prosa: docs/contrato-de-datos.md",
   "type": "object",
+  "additionalProperties": false,
   "required": [
     "version",
     "snapshot_date",
     "generated_at",
     "item_count",
-    "items"
+    "items",
+    "dedup"
   ],
-  "additionalProperties": false,
   "properties": {
     "version": {
       "type": "string",
-      "description": "Version del contrato de datos con la que se genero el snapshot.",
-      "const": "1.0"
+      "description": "Version del contrato con la que se genero el snapshot.",
+      "const": "2.0"
     },
     "snapshot_date": {
       "type": "string",
-      "description": "Dia que cubre el snapshot. Debe coincidir con el nombre del archivo.",
+      "description": "Dia que cubre el snapshot. Coincide con el nombre del archivo.",
       "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
     },
     "generated_at": {
       "type": "string",
+      "description": "Momento en que se cerro el snapshot, en UTC.",
       "format": "date-time",
-      "description": "Momento en que se cerro el snapshot, en UTC."
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
     },
     "item_count": {
       "type": "integer",
-      "description": "Numero de entradas en items.",
+      "description": "Numero de entradas en items. Cuenta tambien las pendientes y descartadas.",
       "minimum": 1
     },
     "items": {
       "type": "array",
-      "description": "Noticias del dia, ordenadas por published_at descendente.",
+      "description": "Noticias del dia, ordenadas por published_at descendente. Cada elemento se valida contra ./noticia.schema.json mediante $ref: este esquema no repite la definicion de una noticia, la referencia.",
       "minItems": 1,
       "items": {
-        "$ref": "noticia.schema.json"
+        "description": "Cada elemento de items valida contra el esquema de una noticia, ./noticia.schema.json.",
+        "$ref": "./noticia.schema.json"
+      }
+    },
+    "dedup": {
+      "type": "object",
+      "description": "Registro de la deduplicacion entre dias: contra que snapshot se comparo y que se dejo fuera por repetido.",
+      "additionalProperties": false,
+      "required": ["previous_snapshot", "discarded"],
+      "properties": {
+        "previous_snapshot": {
+          "description": "Dia del snapshot con el que se comparo, o null si este es el primero.",
+          "type": ["string", "null"],
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "discarded": {
+          "type": "array",
+          "description": "Hechos que no entraron en items porque su clave ya estaba en el snapshot anterior.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["dedup_key", "duplicate_of", "reason"],
+            "properties": {
+              "dedup_key": {
+                "type": "string",
+                "description": "Clave repetida, con el mismo formato que en una noticia.",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*:[0-9a-f]{12}$"
+              },
+              "duplicate_of": {
+                "type": "string",
+                "description": "id de la entrada del snapshot anterior que ya registraba el hecho.",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "reason": {
+                "type": "string",
+                "description": "Por que se volvio a ver el hecho y por que no se registra otra vez.",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        }
       }
     }
   }

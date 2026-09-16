@@ -1,116 +1,141 @@
 {
-  "version": "1.0",
+  "version": "2.0",
   "snapshot_date": "2026-09-14",
   "generated_at": "2026-09-14T21:10:00Z",
-  "item_count": 9,
+  "item_count": 7,
   "items": [
     {
-      "id": "2026-09-14-openai-responses-batch",
+      "id": "2026-09-14-openai-blog-responses-batch",
       "title": "Batch processing for the Responses API",
       "url": "https://openai.com/index/batch-processing-responses-api/",
-      "source": "OpenAI Blog",
+      "source": "openai-blog",
       "source_type": "blog_oficial",
       "category": "api",
       "published_at": "2026-09-14T17:30:00Z",
       "collected_at": "2026-09-14T21:04:00Z",
+      "evidence": {
+        "url": "https://openai.com/index/batch-processing-responses-api/",
+        "quote": "Batch requests are queued and returned within 24 hours at a lower per-token price than synchronous calls."
+      },
+      "dedup_key": "openai-blog:d06c82ebd6fc",
+      "status": "procesado",
       "summary": "La API de respuestas acepta envíos por lotes con resultados diferidos y un precio menor por token que las llamadas en línea.",
       "tags": ["api", "costos", "openai"]
     },
     {
       "id": "2026-09-14-anthropic-changelog-limites-de-lote",
       "title": "Message Batches API: higher queue limits",
-      "url": "https://docs.anthropic.com/en/release-notes/api",
-      "source": "Anthropic Changelog",
+      "url": "https://docs.anthropic.com/en/release-notes/api#2026-09-14",
+      "source": "anthropic-changelog",
       "source_type": "changelog",
       "category": "api",
       "published_at": "2026-09-14T16:05:00Z",
       "collected_at": "2026-09-14T21:04:00Z",
+      "evidence": {
+        "url": "https://docs.anthropic.com/en/release-notes/api#2026-09-14",
+        "quote": "We raised the maximum number of queued batch requests and added a per-request status field inside the batch result."
+      },
+      "dedup_key": "anthropic-changelog:b7ddc8165ea3",
+      "status": "procesado",
       "summary": "El changelog reporta límites más altos de cola para la API de lotes y un nuevo campo de estado por solicitud dentro del lote.",
       "tags": ["api", "lotes", "anthropic"]
     },
     {
-      "id": "2026-09-14-google-deepmind-gemini-contexto-largo",
+      "id": "2026-09-14-google-deepmind-blog-gemini-contexto-largo",
       "title": "Updating Gemini for long-context retrieval tasks",
       "url": "https://deepmind.google/discover/blog/updating-gemini-for-long-context-retrieval-tasks/",
-      "source": "Google DeepMind Blog",
+      "source": "google-deepmind-blog",
       "source_type": "blog_oficial",
       "category": "modelo",
       "published_at": "2026-09-14T14:20:00Z",
       "collected_at": "2026-09-14T21:04:00Z",
+      "evidence": {
+        "url": "https://deepmind.google/discover/blog/updating-gemini-for-long-context-retrieval-tasks/",
+        "quote": "This update targets retrieval over long contexts and publishes latency figures measured by the team."
+      },
+      "dedup_key": "google-deepmind-blog:96a4c568daaf",
+      "status": "procesado",
       "summary": "Actualización de la familia Gemini orientada a tareas de recuperación sobre contextos largos, con nuevas cifras de latencia publicadas por el equipo.",
       "tags": ["modelo", "contexto-largo", "google"]
     },
     {
-      "id": "2026-09-14-openai-guia-de-evaluaciones",
-      "title": "A practical guide to running evals",
-      "url": "https://openai.com/index/a-practical-guide-to-running-evals/",
-      "source": "openai blog",
-      "source_type": "blog_oficial",
-      "category": "producto",
-      "published_at": "2026-09-14T12:00:00Z",
-      "collected_at": "2026-09-14T21:04:00Z",
-      "summary": "Guía del panel de evaluaciones de la plataforma: cómo armar conjuntos de prueba y comparar versiones de un mismo prompt.",
-      "tags": ["evaluaciones", "producto", "openai"]
-    },
-    {
-      "id": "2026-09-14-vllm-release-v0-11-0",
+      "id": "2026-09-14-github-vllm-v0-11-0",
       "title": "vLLM v0.11.0",
       "url": "https://github.com/vllm-project/vllm/releases/tag/v0.11.0",
-      "source": "GitHub · vllm-project/vllm",
+      "source": "github-vllm",
       "source_type": "repositorio",
       "category": "herramienta_open_source",
       "published_at": "2026-09-14T10:45:00Z",
       "collected_at": "2026-09-14T21:04:00Z",
-      "summary": "",
+      "evidence": {
+        "url": "https://github.com/vllm-project/vllm/releases/tag/v0.11.0",
+        "quote": "v0.11.0 — Latest release"
+      },
+      "dedup_key": "github-vllm:7a54fac107cd",
+      "status": "pendiente",
+      "status_note": "La página de versiones respondió con el listado, pero el cuerpo de la nota de v0.11.0 quedó vacío: falta releer la fuente y confirmar los cambios.",
+      "summary": "Nueva versión menor del servidor de inferencia vLLM; queda por confirmar el detalle de los cambios contra la nota de versión completa.",
       "tags": ["inferencia", "open-source"]
     },
     {
-      "id": "2026-09-14-hugging-face-transformers-v5-1",
-      "title": "Transformers v5.1: faster loading for sharded checkpoints",
-      "url": "https://huggingface.co/blog/transformers-v5-1",
-      "source": "Hugging Face Blog",
-      "source_type": "blog_oficial",
-      "category": "herramienta_open_source",
-      "published_at": "2026-09-14T08:15:00Z",
-      "collected_at": "2026-09-14T21:04:00Z",
-      "summary": "La versión 5.1 de transformers reduce el tiempo de carga de checkpoints repartidos en varios archivos y ajusta la API de cuantización.",
-      "tags": ["open-source", "biblioteca", "hugging-face"]
-    },
-    {
-      "id": "2026-09-13-mistral-small-3-2",
+      "id": "2026-09-13-mistral-ai-news-small-3-2",
       "title": "Mistral Small 3.2",
       "url": "https://mistral.ai/news/mistral-small-3-2/",
-      "source": "Mistral AI News",
+      "source": "mistral-ai-news",
       "source_type": "blog_oficial",
       "category": "modelo",
       "published_at": "2026-09-13T16:40:00Z",
       "collected_at": "2026-09-14T21:04:00Z",
+      "evidence": {
+        "url": "https://mistral.ai/news/mistral-small-3-2/",
+        "quote": "Mistral Small 3.2 is released with open weights and is tuned for tool calling."
+      },
+      "dedup_key": "mistral-ai-news:80cc9073984d",
+      "status": "procesado",
       "summary": "Nueva versión del modelo pequeño de Mistral, publicada con pesos abiertos y enfocada en llamadas a herramientas.",
       "tags": ["modelo", "pesos-abiertos", "mistral"]
     },
     {
-      "id": "2026-09-13-ue-calendario-reglamento-ia",
+      "id": "2026-09-13-diario-oficial-ue-calendario-reglamento-ia",
       "title": "Comunicación sobre el calendario de aplicación del Reglamento de IA",
       "url": "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=OJ:C_202605412",
-      "source": "Diario Oficial de la UE",
+      "source": "diario-oficial-ue",
       "source_type": "boletin_regulatorio",
       "category": "regulacion",
       "published_at": "2026-09-13T09:00:00Z",
       "collected_at": "2026-09-14T21:04:00Z",
-      "summary": "",
+      "evidence": {
+        "url": "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=OJ:C_202605412",
+        "quote": "Comunicación de la Comisión relativa al calendario de aplicación de las obligaciones del Reglamento de IA."
+      },
+      "dedup_key": "diario-oficial-ue:ef31e0a38141",
+      "status": "pendiente",
+      "status_note": "El boletín devolvió la ficha del documento pero no el texto completo: falta confirmar qué obligaciones cambian de fecha antes de darla por procesada.",
+      "summary": "Comunicación de la Comisión sobre el calendario de aplicación de las obligaciones del Reglamento de IA; queda por leer el texto completo.",
       "tags": ["regulacion", "union-europea"]
     },
     {
       "id": "2026-09-13-import-ai-evaluacion-de-agentes",
       "title": "Import AI 421: measuring agents over long horizons",
       "url": "https://importai.substack.com/p/import-ai-421",
-      "source": "Import AI",
+      "source": "import-ai",
       "source_type": "newsletter",
       "category": "investigacion",
       "published_at": "2026-09-13T07:00:00Z",
       "collected_at": "2026-09-14T21:04:00Z",
+      "evidence": {
+        "url": "https://importai.substack.com/p/import-ai-421",
+        "quote": "Per-task averages hide the failures that accumulate when an agent works over a long horizon."
+      },
+      "dedup_key": "import-ai:6e281ff87ca1",
+      "status": "descartado",
+      "status_note": "La entrada enlaza el boletín y no el trabajo original que reseña, que es lo que pide el catálogo para Import AI. Se conserva para dejar rastro; se rehará con el enlace primario.",
       "summary": "Reseña de un trabajo sobre cómo medir agentes en tareas de horizonte largo y por qué los promedios por tarea esconden los fallos acumulados.",
       "tags": ["investigacion", "agentes", "evaluacion"]
     }
-  ]
+  ],
+  "dedup": {
+    "previous_snapshot": null,
+    "discarded": []
+  }
 }
