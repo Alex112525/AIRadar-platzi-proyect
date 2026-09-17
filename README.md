@@ -33,6 +33,8 @@ de razonamiento distintos.
 | Subagente de changelogs y versiones | `.codex/agents/changelogs-y-releases.md` |
 | Subagente de investigación | `.codex/agents/investigacion.md` |
 | Subagente de regulación | `.codex/agents/regulacion.md` |
+| Plan de persistencia y administrador editorial en Notion | `docs/persistencia.md` |
+| Esquema relacional para Supabase | `db/supabase/schema.sql` |
 
 ## Cómo se lee el proyecto
 

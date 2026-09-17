@@ -74,9 +74,12 @@ planteada para este repositorio.
 │   └── agents/                # subagentes: uno por tipo de fuente
 ├── data/
 │   └── snapshots/             # un archivo por día: YYYY-MM-DD.json
+├── db/
+│   └── supabase/schema.sql    # tablas del radar en Supabase, sin aplicar
 ├── docs/
 │   ├── contrato-de-datos.md   # definición de noticia y de snapshot
 │   ├── medicion-de-tokens.md  # ahorro del recolector, antes y después
+│   ├── persistencia.md        # plan de persistencia y Notion vía MCP
 │   └── subagentes.md          # reparto en paralelo y niveles de razonamiento
 ├── schemas/
 │   ├── noticia.schema.json    # JSON Schema de una noticia
