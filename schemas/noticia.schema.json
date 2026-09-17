@@ -1,48 +1,150 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Alex112525/AIRadar-platzi-proyect/schemas/noticia.schema.json",
   "title": "noticia",
-  "description": "Una noticia o lanzamiento de IA recolectado por el radar. Definicion en prosa: docs/contrato-de-datos.md",
+  "description": "Una noticia o lanzamiento de IA recolectado de una fuente del catalogo. Definicion en prosa: docs/contrato-de-datos.md",
   "type": "object",
+  "additionalProperties": false,
   "required": [
     "id",
     "title",
     "url",
     "source",
-    "published_at"
+    "source_type",
+    "category",
+    "published_at",
+    "collected_at",
+    "evidence",
+    "dedup_key",
+    "status"
   ],
   "properties": {
     "id": {
       "type": "string",
-      "description": "Identificador de la entrada dentro del snapshot."
+      "description": "Identificador unico dentro del snapshot: fecha de publicacion, fuente y titulo corto.",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "minLength": 12
     },
     "title": {
       "type": "string",
-      "description": "Titulo de la publicacion, en su idioma original."
+      "description": "Titulo en el idioma original, sin editar.",
+      "minLength": 1,
+      "maxLength": 200
     },
     "url": {
       "type": "string",
-      "description": "Enlace a la publicacion original."
+      "description": "Enlace canonico a la publicacion original, sin parametros de seguimiento.",
+      "format": "uri",
+      "pattern": "^https://",
+      "maxLength": 500
     },
     "source": {
       "type": "string",
-      "description": "Fuente de la que salio la noticia."
+      "description": "Fuente: identificador estable copiado del catalogo references/fuentes.md.",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "maxLength": 60
     },
-    "published_at": {
+    "source_type": {
       "type": "string",
-      "description": "Fecha y hora de publicacion en UTC."
-    },
-    "summary": {
-      "type": "string",
-      "description": "Resumen corto en espanol."
-    },
-    "tags": {
-      "type": "array",
-      "description": "Etiquetas en minusculas para filtrar despues.",
-      "items": { "type": "string" }
+      "description": "Tipo de fuente. Lista cerrada.",
+      "enum": [
+        "blog_oficial",
+        "changelog",
+        "repositorio",
+        "newsletter",
+        "boletin_regulatorio"
+      ]
     },
     "category": {
       "type": "string",
-      "description": "Categoria tematica de la noticia."
+      "description": "Categoria tematica. Lista cerrada: una noticia tiene exactamente una.",
+      "enum": [
+        "modelo",
+        "api",
+        "herramienta_open_source",
+        "investigacion",
+        "regulacion",
+        "producto"
+      ]
+    },
+    "published_at": {
+      "type": "string",
+      "description": "Fecha y hora de publicacion en UTC.",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "collected_at": {
+      "type": "string",
+      "description": "Fecha y hora de recoleccion en UTC.",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "evidence": {
+      "type": "object",
+      "description": "Evidencia que respalda el titular: fuente primaria y cita textual tomada de ella.",
+      "additionalProperties": false,
+      "required": ["url", "quote"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "Enlace a la fuente primaria de la que sale la cita.",
+          "format": "uri",
+          "pattern": "^https://",
+          "maxLength": 500
+        },
+        "quote": {
+          "type": "string",
+          "description": "Cita textual corta, en el idioma original, copiada sin reescribir.",
+          "minLength": 1,
+          "maxLength": 300
+        }
+      }
+    },
+    "dedup_key": {
+      "type": "string",
+      "description": "Clave de deduplicacion: fuente, dos puntos y los 12 primeros caracteres del SHA-256 de la URL canonica.",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*:[0-9a-f]{12}$"
+    },
+    "status": {
+      "type": "string",
+      "description": "Estado de la entrada en el flujo del radar. Lista cerrada.",
+      "enum": ["pendiente", "procesado", "descartado"]
+    },
+    "status_note": {
+      "type": "string",
+      "description": "Motivo del estado. Obligatorio si el estado es pendiente o descartado; ausente si es procesado.",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumen propio en espanol. Opcional: si no hay, se omite el campo, nunca se deja vacio.",
+      "minLength": 1,
+      "maxLength": 280
+    },
+    "tags": {
+      "type": "array",
+      "description": "Etiquetas libres en minusculas para filtrar despues.",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
     }
-  }
+  },
+  "allOf": [
+    {
+      "description": "Un estado que no es procesado tiene que explicarse en status_note.",
+      "if": {
+        "required": ["status"],
+        "properties": { "status": { "enum": ["pendiente", "descartado"] } }
+      },
+      "then": { "required": ["status_note"] }
+    },
+    {
+      "description": "Una entrada procesada no lleva status_note: no hay nada que justificar.",
+      "if": {
+        "required": ["status"],
+        "properties": { "status": { "const": "procesado" } }
+      },
+      "then": { "not": { "required": ["status_note"] } }
+    }
+  ]
 }

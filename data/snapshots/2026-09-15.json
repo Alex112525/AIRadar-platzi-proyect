@@ -1,0 +1,119 @@
+{
+  "version": "2.0",
+  "snapshot_date": "2026-09-15",
+  "generated_at": "2026-09-15T21:12:00Z",
+  "item_count": 5,
+  "items": [
+    {
+      "id": "2026-09-15-anthropic-changelog-streaming-de-herramientas",
+      "title": "Tool use: streaming partial tool inputs",
+      "url": "https://docs.anthropic.com/en/release-notes/api#2026-09-15",
+      "source": "anthropic-changelog",
+      "source_type": "changelog",
+      "category": "api",
+      "published_at": "2026-09-15T16:40:00Z",
+      "collected_at": "2026-09-15T21:05:00Z",
+      "evidence": {
+        "url": "https://docs.anthropic.com/en/release-notes/api#2026-09-15",
+        "quote": "Tool inputs can now be streamed as partial JSON while the model is still writing them."
+      },
+      "dedup_key": "anthropic-changelog:9fad3771236d",
+      "status": "procesado",
+      "summary": "El changelog añade el envío incremental de los argumentos de una herramienta mientras el modelo los escribe, en lugar de esperar al bloque completo.",
+      "tags": ["api", "herramientas", "anthropic"]
+    },
+    {
+      "id": "2026-09-15-github-transformers-v5-1-1",
+      "title": "Transformers v5.1.1",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.1.1",
+      "source": "github-transformers",
+      "source_type": "repositorio",
+      "category": "herramienta_open_source",
+      "published_at": "2026-09-15T15:05:00Z",
+      "collected_at": "2026-09-15T21:05:00Z",
+      "evidence": {
+        "url": "https://github.com/huggingface/transformers/releases/tag/v5.1.1",
+        "quote": "Patch release fixing checkpoint loading on Windows paths and a regression in the quantization API."
+      },
+      "dedup_key": "github-transformers:7795ff727b54",
+      "status": "procesado",
+      "summary": "Versión de parche de transformers: corrige la carga de checkpoints en rutas de Windows y una regresión de la API de cuantización introducida en 5.1.",
+      "tags": ["open-source", "biblioteca", "hugging-face"]
+    },
+    {
+      "id": "2026-09-15-google-deepmind-blog-planificacion-de-agentes",
+      "title": "Evaluating long-horizon planning in agents",
+      "url": "https://deepmind.google/discover/blog/evaluating-long-horizon-planning-in-agents/",
+      "source": "google-deepmind-blog",
+      "source_type": "blog_oficial",
+      "category": "investigacion",
+      "published_at": "2026-09-15T13:30:00Z",
+      "collected_at": "2026-09-15T21:05:00Z",
+      "evidence": {
+        "url": "https://deepmind.google/discover/blog/evaluating-long-horizon-planning-in-agents/",
+        "quote": "We describe a benchmark for planning tasks that span many steps and report where current agents lose track of the goal."
+      },
+      "dedup_key": "google-deepmind-blog:def418d4c60d",
+      "status": "pendiente",
+      "status_note": "El blog cargó, pero el PDF del informe técnico que enlaza devolvió un tiempo de espera agotado: falta leerlo antes de dar por buenas las cifras.",
+      "summary": "Presentación de un banco de pruebas para planificación en muchas etapas; el informe técnico con las cifras queda por revisar.",
+      "tags": ["investigacion", "agentes", "google"]
+    },
+    {
+      "id": "2026-09-15-openai-blog-limites-por-proyecto",
+      "title": "Project-level usage limits in the API dashboard",
+      "url": "https://openai.com/index/project-level-usage-limits/",
+      "source": "openai-blog",
+      "source_type": "blog_oficial",
+      "category": "producto",
+      "published_at": "2026-09-15T09:45:00Z",
+      "collected_at": "2026-09-15T21:05:00Z",
+      "evidence": {
+        "url": "https://openai.com/index/project-level-usage-limits/",
+        "quote": "Admins can now set a monthly spending limit per project instead of only at the organization level."
+      },
+      "dedup_key": "openai-blog:71d391963e57",
+      "status": "procesado",
+      "summary": "El panel de la API permite fijar un límite de gasto mensual por proyecto y no solo para toda la organización.",
+      "tags": ["producto", "costos", "openai"]
+    },
+    {
+      "id": "2026-09-14-diario-oficial-ue-correccion-calendario",
+      "title": "Corrección de errores de la Comunicación sobre el calendario de aplicación del Reglamento de IA",
+      "url": "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=OJ:C_202605487",
+      "source": "diario-oficial-ue",
+      "source_type": "boletin_regulatorio",
+      "category": "regulacion",
+      "published_at": "2026-09-14T22:30:00Z",
+      "collected_at": "2026-09-15T21:05:00Z",
+      "evidence": {
+        "url": "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=OJ:C_202605487",
+        "quote": "Corrección de errores de la Comunicación publicada en el Diario Oficial C 202605412."
+      },
+      "dedup_key": "diario-oficial-ue:65f3ed6a3db3",
+      "status": "procesado",
+      "summary": "Corrección de errores de la comunicación del 13 de septiembre: es un documento distinto, con su propia referencia en el Diario Oficial, no una repetición.",
+      "tags": ["regulacion", "union-europea"]
+    }
+  ],
+  "dedup": {
+    "previous_snapshot": "2026-09-14",
+    "discarded": [
+      {
+        "dedup_key": "openai-blog:d06c82ebd6fc",
+        "duplicate_of": "2026-09-14-openai-blog-responses-batch",
+        "reason": "La portada de openai-blog seguía listando la publicación del 14 con la misma URL canónica; ya está registrada."
+      },
+      {
+        "dedup_key": "google-deepmind-blog:96a4c568daaf",
+        "duplicate_of": "2026-09-14-google-deepmind-blog-gemini-contexto-largo",
+        "reason": "El listado del blog de DeepMind conserva la entrada del 14 en la primera posición; misma clave, mismo hecho."
+      },
+      {
+        "dedup_key": "mistral-ai-news:80cc9073984d",
+        "duplicate_of": "2026-09-13-mistral-ai-news-small-3-2",
+        "reason": "El índice de Mistral reordenó la portada y volvió a mostrar la nota del 13; misma URL canónica que la entrada ya registrada."
+      }
+    ]
+  }
+}
