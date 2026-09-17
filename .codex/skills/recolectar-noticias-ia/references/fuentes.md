@@ -9,18 +9,24 @@ solo para leerlo.
 La fase *Buscar* de la skill solo visita los dominios de esta tabla: un
 dominio que no está aquí no se consulta hasta que se agregue con su commit.
 
-| `source` | Nombre | `source_type` | URL | Revisión |
-|---|---|---|---|---|
-| `openai-blog` | OpenAI Blog | `blog_oficial` | https://openai.com/news/ | diaria |
-| `anthropic-changelog` | Anthropic Changelog | `changelog` | https://docs.anthropic.com/en/release-notes/overview | diaria |
-| `google-deepmind-blog` | Google DeepMind Blog | `blog_oficial` | https://deepmind.google/discover/blog/ | diaria |
-| `meta-ai-blog` | Meta AI Blog | `blog_oficial` | https://ai.meta.com/blog/ | diaria |
-| `mistral-ai-news` | Mistral AI News | `blog_oficial` | https://mistral.ai/news/ | diaria |
-| `hugging-face-blog` | Hugging Face Blog | `blog_oficial` | https://huggingface.co/blog | diaria |
-| `github-vllm` | GitHub · vllm-project/vllm | `repositorio` | https://github.com/vllm-project/vllm/releases | diaria |
-| `github-transformers` | GitHub · huggingface/transformers | `repositorio` | https://github.com/huggingface/transformers/releases | diaria |
-| `diario-oficial-ue` | Diario Oficial de la UE | `boletin_regulatorio` | https://eur-lex.europa.eu/oj/direct-access.html | semanal |
-| `import-ai` | Import AI | `newsletter` | https://importai.substack.com/ | semanal |
+La columna **Feed** es la que lee `tools/recolector.py` con `--red`: el
+recolector consume Atom o RSS, no el HTML de la portada, porque un feed tiene
+la fecha, el enlace y la sección en campos fijos y no cambia de forma cada
+rediseño. La columna **URL** sigue siendo la página que se abre para verificar
+una entrada a mano.
+
+| `source` | Nombre | `source_type` | URL | Feed | Revisión |
+|---|---|---|---|---|---|
+| `openai-blog` | OpenAI Blog | `blog_oficial` | https://openai.com/news/ | https://openai.com/news/rss.xml | diaria |
+| `anthropic-changelog` | Anthropic Changelog | `changelog` | https://docs.anthropic.com/en/release-notes/overview | https://docs.anthropic.com/release-notes.atom | diaria |
+| `google-deepmind-blog` | Google DeepMind Blog | `blog_oficial` | https://deepmind.google/discover/blog/ | https://deepmind.google/blog/rss.xml | diaria |
+| `meta-ai-blog` | Meta AI Blog | `blog_oficial` | https://ai.meta.com/blog/ | https://ai.meta.com/blog/rss/ | diaria |
+| `mistral-ai-news` | Mistral AI News | `blog_oficial` | https://mistral.ai/news/ | https://mistral.ai/news/rss.xml | diaria |
+| `hugging-face-blog` | Hugging Face Blog | `blog_oficial` | https://huggingface.co/blog | https://huggingface.co/blog/feed.xml | diaria |
+| `github-vllm` | GitHub · vllm-project/vllm | `repositorio` | https://github.com/vllm-project/vllm/releases | https://github.com/vllm-project/vllm/releases.atom | diaria |
+| `github-transformers` | GitHub · huggingface/transformers | `repositorio` | https://github.com/huggingface/transformers/releases | https://github.com/huggingface/transformers/releases.atom | diaria |
+| `diario-oficial-ue` | Diario Oficial de la UE | `boletin_regulatorio` | https://eur-lex.europa.eu/oj/direct-access.html | https://eur-lex.europa.eu/EN/display-feed.rss?myRssId=oj-c | semanal |
+| `import-ai` | Import AI | `newsletter` | https://importai.substack.com/ | https://importai.substack.com/feed | semanal |
 
 ## Cómo se eligieron
 

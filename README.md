@@ -5,9 +5,11 @@ revisan las mismas fuentes y se guarda un archivo JSON con lo publicado, con
 una forma fija que permite compararlo con el de cualquier otro día. El
 repositorio lo opera Codex siguiendo `AGENTS.md`.
 
-Esta es la etapa 1 de 5 del proyecto: los cimientos. Todavía no hay
-recolección automática; lo que existe son las reglas, los esquemas, dos
-snapshots de ejemplo y la skill que hará el trabajo.
+Va por la etapa 2 de 5. La etapa 1 fijó las reglas: el contrato de datos, los
+esquemas y la skill. La etapa 2 automatiza la recolección: un tool en Python
+arma el snapshot, la skill lo invoca en lugar de hacer el trabajo a mano, y la
+búsqueda se reparte entre cuatro subagentes que corren en paralelo con niveles
+de razonamiento distintos.
 
 ## Dónde está cada cosa
 
@@ -19,9 +21,18 @@ snapshots de ejemplo y la skill que hará el trabajo.
 | JSON Schema del snapshot diario | `schemas/snapshot.schema.json` |
 | Snapshot de ejemplo, primer día | `data/snapshots/2026-09-14.json` |
 | Snapshot de ejemplo, segundo día con deduplicación | `data/snapshots/2026-09-15.json` |
+| Snapshot armado por el recolector | `data/snapshots/2026-09-16.json` |
 | Skill de recolección | `.codex/skills/recolectar-noticias-ia/SKILL.md` |
-| Catálogo de fuentes que usa la skill | `.codex/skills/recolectar-noticias-ia/references/fuentes.md` |
+| Catálogo de fuentes y sus feeds | `.codex/skills/recolectar-noticias-ia/references/fuentes.md` |
 | Validador de snapshots | `.codex/skills/recolectar-noticias-ia/scripts/validar_snapshot.py` |
+| Recolector: arma el snapshot del día | `tools/recolector.py` |
+| Respuestas de ejemplo de los subagentes | `tools/fixtures/` |
+| Medición de tokens, antes y después | `docs/medicion-de-tokens.md` |
+| Reparto en paralelo y niveles de razonamiento | `docs/subagentes.md` |
+| Subagente de blogs de proveedor | `.codex/agents/blogs-oficiales.md` |
+| Subagente de changelogs y versiones | `.codex/agents/changelogs-y-releases.md` |
+| Subagente de investigación | `.codex/agents/investigacion.md` |
+| Subagente de regulación | `.codex/agents/regulacion.md` |
 
 ## Cómo se lee el proyecto
 
@@ -32,11 +43,15 @@ deduplicación y el estado—, y cómo se arma un snapshot. Los dos archivos de
 snapshot no repite la definición de una noticia, la referencia con
 `"$ref": "./noticia.schema.json"`.
 
-`data/snapshots/` tiene dos días seguidos escritos según esas reglas.
+`data/snapshots/` tiene tres días seguidos escritos según esas reglas.
 `AGENTS.md` explica cómo se trabaja sobre todo eso —incluida la política de
 permisos de sesión frente a permanentes— y
 `.codex/skills/recolectar-noticias-ia/` empaqueta la recolección en cinco
 fases para poder repetirla igual cada día.
+
+Para la etapa 2, sigue con `docs/subagentes.md`, que explica quién busca qué y
+con qué nivel de razonamiento, y con `docs/medicion-de-tokens.md`, que mide lo
+que cuesta la pasada con el tool y sin él.
 
 ## Sobre los snapshots de ejemplo
 
@@ -51,6 +66,11 @@ entradas quedaron en `pendiente` porque la fuente respondió a medias y una
 quedó en `descartado` por enlazar al boletín en vez de al trabajo original. El
 del 15 se compara con el anterior y deja tres hechos fuera por clave repetida,
 anotados en `dedup.discarded`.
+
+El del 16 ya no está escrito a mano: lo produjo `tools/recolector.py` a partir
+de las respuestas de `tools/fixtures/`, y deja dos hechos fuera por clave
+repetida y una entrada en `pendiente` porque la fuente la etiquetó con una
+sección que no corresponde a ninguna categoría del contrato.
 
 ## Validar un snapshot
 
@@ -73,8 +93,29 @@ anterior reaparezca y que los descartes declarados existan de verdad. Sale con
 código 0 cuando el archivo cumple el contrato y con 1 cuando no, listando los
 errores. Solo necesita Python 3 y su biblioteca estándar.
 
+## Armar un snapshot
+
+```bash
+# Con las respuestas de ejemplo que trae el repositorio
+python3 tools/recolector.py \
+  --fecha 2026-09-16 \
+  --anterior data/snapshots/2026-09-15.json \
+  --salida /tmp/2026-09-16.json
+
+# Sin escribir nada, solo para ver qué haría
+python3 tools/recolector.py --fecha 2026-09-16 --dry-run
+```
+
+Sale el mismo archivo que `data/snapshots/2026-09-16.json` salvo por los
+`summary`: los resúmenes son lo único que no puede producir un programa, y el
+paso editorial los entrega aparte con `--resumenes`, indexados por URL. Con
+`--red` lee los feeds del catálogo en vez de los archivos de ejemplo.
+Solo necesita Python 3 y su biblioteca estándar, igual que el validador, y es
+determinista: repetir la orden con las mismas entradas no cambia ni un byte.
+Las opciones completas están en `AGENTS.md`.
+
 ## Siguientes etapas
 
-La recolección real y la publicación del radar llegan en las etapas
-siguientes. Lo que se fija aquí es el contrato: a partir de ahora, cualquier
-snapshot nuevo tiene que poder leerse con las mismas reglas.
+La publicación del radar llega en las etapas siguientes. Lo que se fija aquí es
+el contrato: a partir de ahora, cualquier snapshot nuevo tiene que poder leerse
+con las mismas reglas.

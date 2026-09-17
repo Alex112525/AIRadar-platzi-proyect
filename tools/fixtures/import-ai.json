@@ -1,0 +1,14 @@
+{
+  "source": "import-ai",
+  "fetched_at": "2026-09-16T21:04:00Z",
+  "items": [
+    {
+      "title": "Retrieval budgets: how much context an agent actually reads",
+      "url": "https://arxiv.org/abs/2609.04412",
+      "evidence_url": "https://arxiv.org/abs/2609.04412",
+      "published_at": "2026-09-16T08:00:00Z",
+      "section": "paper",
+      "quote": "Across six agent benchmarks, retrieving more than twelve documents per step leaves task accuracy flat while token cost keeps growing linearly."
+    }
+  ]
+}

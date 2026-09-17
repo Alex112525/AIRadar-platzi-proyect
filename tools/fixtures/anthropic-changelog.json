@@ -1,0 +1,20 @@
+{
+  "source": "anthropic-changelog",
+  "fetched_at": "2026-09-16T21:04:00Z",
+  "items": [
+    {
+      "title": "Messages API: prompt caching for tool definitions",
+      "url": "https://docs.anthropic.com/en/release-notes/api#2026-09-16",
+      "published_at": "2026-09-16T14:10:00Z",
+      "section": "api",
+      "quote": "Tool definitions can be marked as cacheable, so a long toolset is billed as a cache read after the first request in a session."
+    },
+    {
+      "title": "Tool use: streaming partial tool inputs",
+      "url": "https://docs.anthropic.com/en/release-notes/api#2026-09-15",
+      "published_at": "2026-09-15T16:40:00Z",
+      "section": "api",
+      "quote": "Tool inputs can now be streamed as partial JSON while the model is still writing them."
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "version": "2.0",
+  "snapshot_date": "2026-09-16",
+  "generated_at": "2026-09-16T21:04:00Z",
+  "item_count": 5,
+  "items": [
+    {
+      "id": "2026-09-16-openai-blog-structured-outputs-for-the-realtime",
+      "title": "Structured outputs for the Realtime API",
+      "url": "https://openai.com/index/structured-outputs-realtime-api/",
+      "source": "openai-blog",
+      "source_type": "blog_oficial",
+      "category": "api",
+      "published_at": "2026-09-16T15:20:00Z",
+      "collected_at": "2026-09-16T21:04:00Z",
+      "evidence": {
+        "url": "https://openai.com/index/structured-outputs-realtime-api/",
+        "quote": "Realtime sessions can now be constrained to a JSON schema, so partial audio responses are parsed as they arrive instead of after the turn ends."
+      },
+      "dedup_key": "openai-blog:46f223dd481e",
+      "status": "procesado",
+      "summary": "Las sesiones en tiempo real aceptan un esquema JSON, de modo que la respuesta se puede ir leyendo mientras llega en vez de esperar al final del turno.",
+      "tags": ["api", "blog_oficial", "openai-blog"]
+    },
+    {
+      "id": "2026-09-16-anthropic-changelog-messages-api-prompt-caching-for",
+      "title": "Messages API: prompt caching for tool definitions",
+      "url": "https://docs.anthropic.com/en/release-notes/api#2026-09-16",
+      "source": "anthropic-changelog",
+      "source_type": "changelog",
+      "category": "api",
+      "published_at": "2026-09-16T14:10:00Z",
+      "collected_at": "2026-09-16T21:04:00Z",
+      "evidence": {
+        "url": "https://docs.anthropic.com/en/release-notes/api#2026-09-16",
+        "quote": "Tool definitions can be marked as cacheable, so a long toolset is billed as a cache read after the first request in a session."
+      },
+      "dedup_key": "anthropic-changelog:6558dfa1928b",
+      "status": "procesado",
+      "summary": "Las definiciones de herramientas pueden marcarse como cacheables: un catálogo largo de tools se cobra como lectura de caché a partir de la segunda petición.",
+      "tags": ["api", "changelog", "anthropic-changelog"]
+    },
+    {
+      "id": "2026-09-16-openai-blog-model-spec-update-clarifying-refusal",
+      "title": "Model spec update: clarifying refusal behavior",
+      "url": "https://openai.com/index/model-spec-refusal-update/",
+      "source": "openai-blog",
+      "source_type": "blog_oficial",
+      "category": "producto",
+      "published_at": "2026-09-16T11:00:00Z",
+      "collected_at": "2026-09-16T21:04:00Z",
+      "evidence": {
+        "url": "https://openai.com/index/model-spec-refusal-update/",
+        "quote": "The updated spec describes when the model declines a request and what it says instead."
+      },
+      "dedup_key": "openai-blog:6f1f644c07bf",
+      "status": "pendiente",
+      "status_note": "La fuente etiquetó la publicación como «safety», que no corresponde a ninguna categoría del contrato: falta clasificarla a mano.",
+      "tags": ["producto", "blog_oficial", "openai-blog"]
+    },
+    {
+      "id": "2026-09-16-import-ai-retrieval-budgets-how-much-context",
+      "title": "Retrieval budgets: how much context an agent actually reads",
+      "url": "https://arxiv.org/abs/2609.04412",
+      "source": "import-ai",
+      "source_type": "newsletter",
+      "category": "investigacion",
+      "published_at": "2026-09-16T08:00:00Z",
+      "collected_at": "2026-09-16T21:04:00Z",
+      "evidence": {
+        "url": "https://arxiv.org/abs/2609.04412",
+        "quote": "Across six agent benchmarks, retrieving more than twelve documents per step leaves task accuracy flat while token cost keeps growing linearly."
+      },
+      "dedup_key": "import-ai:80eb0638662c",
+      "status": "procesado",
+      "summary": "Un trabajo mide cuánto contexto aprovecha de verdad un agente: pasados doce documentos por paso la precisión se estanca y el costo en tokens sigue subiendo.",
+      "tags": ["investigacion", "newsletter", "import-ai"]
+    },
+    {
+      "id": "2026-09-16-diario-oficial-ue-reglamento-de-ejecucion-sobre-normas",
+      "title": "Reglamento de Ejecución sobre normas técnicas para sistemas de IA de alto riesgo",
+      "url": "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=OJ:L_202605633",
+      "source": "diario-oficial-ue",
+      "source_type": "boletin_regulatorio",
+      "category": "regulacion",
+      "published_at": "2026-09-16T06:00:00Z",
+      "collected_at": "2026-09-16T21:04:00Z",
+      "evidence": {
+        "url": "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=OJ:L_202605633",
+        "quote": "Los proveedores de sistemas de IA de alto riesgo dispondrán de dieciocho meses desde la entrada en vigor para adecuar su documentación técnica."
+      },
+      "dedup_key": "diario-oficial-ue:eae5490c6b85",
+      "status": "procesado",
+      "summary": "El reglamento de ejecución fija las normas técnicas de los sistemas de alto riesgo y da dieciocho meses para adecuar la documentación técnica.",
+      "tags": ["regulacion", "boletin_regulatorio", "diario-oficial-ue"]
+    }
+  ],
+  "dedup": {
+    "previous_snapshot": "2026-09-15",
+    "discarded": [
+      {
+        "dedup_key": "anthropic-changelog:9fad3771236d",
+        "duplicate_of": "2026-09-15-anthropic-changelog-streaming-de-herramientas",
+        "reason": "La fuente volvió a listar la publicación con la misma URL canónica; ya estaba registrada en el snapshot 2026-09-15."
+      },
+      {
+        "dedup_key": "openai-blog:71d391963e57",
+        "duplicate_of": "2026-09-15-openai-blog-limites-por-proyecto",
+        "reason": "La fuente volvió a listar la publicación con la misma URL canónica; ya estaba registrada en el snapshot 2026-09-15."
+      }
+    ]
+  }
+}

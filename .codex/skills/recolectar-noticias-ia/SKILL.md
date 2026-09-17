@@ -1,6 +1,6 @@
 ---
 name: recolectar-noticias-ia
-description: Recolecta las noticias y lanzamientos de IA del día a partir del catálogo de fuentes del radar, las deduplica contra el snapshot anterior y escribe el snapshot diario en data/snapshots/. Úsala cuando haya que generar el snapshot de un día, rehacerlo o agregarle una fuente nueva.
+description: Recolecta las noticias y lanzamientos de IA del día repartiendo las fuentes entre subagentes en paralelo y armando el snapshot con tools/recolector.py. Úsala cuando haya que generar el snapshot de un día, rehacerlo o agregarle una fuente nueva.
 ---
 
 # Recolectar noticias de IA
@@ -9,9 +9,24 @@ description: Recolecta las noticias y lanzamientos de IA del día a partir del c
 
 Convertir lo publicado hoy por las fuentes del catálogo en un snapshot diario
 que cumpla el contrato de datos 2.0. La skill cubre el flujo entero —buscar,
-priorizar, estructurar, deduplicar y guardar— para que la recolección sea
-siempre la misma: mismas fuentes, mismos campos, mismo formato de archivo, sin
-decidir nada nuevo cada mañana.
+priorizar, estructurar, deduplicar y guardar—, pero ya no lo hace todo a mano:
+la parte mecánica la ejecuta `tools/recolector.py` de una sola llamada, y la
+búsqueda se reparte entre cuatro subagentes que corren en paralelo.
+
+## Qué decide la skill y qué ejecuta el tool
+
+| Le toca al modelo | Lo ejecuta el tool |
+|---|---|
+| Qué candidata es noticia y cuál es relleno | Leer el catálogo y cada fuente |
+| Elegir el enlace primario cuando la fuente reseña a otra | Normalizar los campos al contrato |
+| Resolver que dos fuentes cuentan el mismo hecho con URLs distintas | Calcular `id` y `dedup_key` |
+| Redactar el `summary` en español | Deduplicar contra el día anterior |
+| Revisar el reporte y decidir si se commitea | Ordenar, contar y escribir el archivo |
+
+La línea es sencilla: lo que tiene una respuesta única y comprobable lo hace el
+programa; lo que exige criterio se queda en el modelo. Un resumen redactado por
+plantilla sería peor que ninguno, y una `dedup_key` calculada «a ojo» sería
+sencillamente falsa.
 
 ## Cuándo usarla
 
@@ -19,8 +34,8 @@ decidir nada nuevo cada mañana.
 - Hay que rehacer un snapshot porque se agregó o corrigió una fuente.
 - Se quiere revisar qué publicó una fuente dentro del formato del radar.
 
-No la uses para analizar o resumir snapshots ya escritos: eso no toca el
-catálogo ni produce archivos nuevos.
+No la uses para analizar snapshots ya escritos: eso no toca el catálogo ni
+produce archivos nuevos.
 
 ## Entradas
 
@@ -28,113 +43,100 @@ catálogo ni produce archivos nuevos.
 |---|---|---|
 | Fecha del snapshot | la pide quien invoca la skill | el día de hoy en UTC |
 | Catálogo de fuentes | `references/fuentes.md` | — |
-| Contrato de datos | `docs/contrato-de-datos.md` | — |
+| Subagentes | `.codex/agents/` | los cuatro |
 | Snapshot anterior | el archivo más reciente de `data/snapshots/` | ninguno, si es el primer día |
 
 ## Permisos
 
-La skill no necesita ningún permiso permanente. Solo dos aprobaciones por
-sesión, cada una pegada a la fase que la usa:
+Ningún permiso permanente. Tres aprobaciones por sesión, cada una pegada a la
+fase que la usa:
 
 | Fase | Permiso | Alcance |
 |---|---|---|
-| Buscar | Acceso a la red | Únicamente los dominios que aparecen en `references/fuentes.md`. |
+| Buscar | Acceso a la red | Solo los dominios del catálogo, y cada subagente solo los de sus fuentes. |
+| Buscar | Escritura en disco | Un directorio temporal fuera del repositorio, donde los subagentes dejan su JSON. |
 | Guardar | Escritura en disco | Únicamente `data/snapshots/`, más el commit local. |
 
-Las fases *Priorizar*, *Estructurar* y *Deduplicar* no piden nada: trabajan
-sobre lo que ya está en memoria y sobre archivos del repositorio, que se leen
-sin aprobación. `git push`, instalar dependencias o escribir fuera de
-`data/snapshots/` quedan fuera de esta skill. La política completa está en la
-sección «Permisos: sesión vs. permanentes» de `AGENTS.md`.
+*Priorizar*, *Estructurar* y *Deduplicar* no piden nada: el tool solo lee el
+catálogo, el directorio temporal y el snapshot anterior. `git push`, instalar
+dependencias o escribir fuera de `data/snapshots/` quedan fuera de esta skill.
+La política completa está en la sección «Permisos: sesión vs. permanentes» de
+`AGENTS.md`.
 
 ## Procedimiento
 
-La recolección son cinco fases en orden. Cada una recibe lo que dejó la
-anterior; si una falla, se aplica su fallback y se sigue.
-
 ### Fase 1 — Buscar
 
-- **Entra:** la fecha del snapshot en UTC y el catálogo `references/fuentes.md`.
-- **Pasos:**
-  1. Fija la fecha en UTC. Ese valor es `snapshot_date` y también el nombre
-     del archivo.
-  2. Pide la aprobación de red para los dominios del catálogo.
-  3. Recorre las fuentes en el orden de la tabla y toma las publicaciones de
-     las últimas 24 horas. De cada una guarda título, enlace, fecha y una
-     frase literal que sirva de evidencia.
-- **Fallback por fuente:** si una fuente no responde, se reintenta una vez y
-  se pasa a la siguiente, anotando que ese día no entró. Si responde a medias
-  o con un formato irreconocible, se conserva lo legible y la entrada nacerá
-  en `pendiente`. Si no publicó nada, no es un fallo. Nunca se completa lo que
-  falta desde el conocimiento propio.
-- **Sale:** una lista de candidatas en bruto, cada una con su fuente de origen.
+Lanza los cuatro subagentes **a la vez**, cada uno con su propio contexto:
+`blogs-oficiales`, `changelogs-y-releases`, `investigacion` y `regulacion`.
+Cada uno recibe la fecha y sus filas del catálogo, y devuelve el JSON de sus
+fuentes. Guarda la respuesta de cada uno en el directorio de trabajo del día,
+un archivo por `source`:
+
+```bash
+DIA=2026-09-16
+TRABAJO="${TMPDIR:-/tmp}/radar-$DIA"
+mkdir -p "$TRABAJO"          # aquí escribe cada subagente: <source>.json
+```
+
+Detalle del reparto, del contexto de cada uno y de qué hacer cuando uno falla:
+`docs/subagentes.md`.
+
+**Fallback:** un subagente que no responde deja fuera sus fuentes y se anota;
+los demás siguen. Si ninguno devolvió nada, la pasada falló y no se escribe
+archivo.
 
 ### Fase 2 — Priorizar
 
-- **Entra:** las candidatas en bruto.
-- **Pasos:**
-  1. Descarta lo que el contrato no considera noticia: opiniones, hilos de
-     redes sociales y notas que reescriben a otra fuente.
-  2. Si dos candidatas del mismo día cuentan el mismo hecho, conserva la
-     publicación primaria y descarta la que la reseña.
-  3. Ordena lo que queda por `published_at`, de lo más reciente a lo más
-     antiguo.
-- **Sale:** la lista del día, ordenada y sin relleno.
+Lo único de la recolección que sigue siendo juicio, y por eso sigue aquí:
 
-### Fase 3 — Estructurar
+1. Descarta lo que el contrato no considera noticia: opiniones, hilos de redes
+   sociales y notas que reescriben a otra fuente.
+2. Si dos subagentes trajeron el mismo hecho con URLs distintas, conserva la
+   publicación primaria. La clave de deduplicación **no** atrapa este caso:
+   mide identidad de publicación, no parecido temático.
+3. Borra del directorio de trabajo los ítems que no entran.
+4. Redacta el `summary` de cada una en español y déjalos en un JSON indexado
+   por URL, que es lo que el paso siguiente le pasa al tool.
 
-- **Entra:** la lista priorizada.
-- **Pasos:**
-  1. Arma cada entrada con los campos del contrato. Los tres cuidados que
-     suelen fallar: `source` se copia literal del catálogo, `category` sale de
-     la lista cerrada, y `evidence.quote` se copia de la fuente sin
-     reescribirla.
-  2. Construye el `id` como `<fecha de publicación>-<source>-<titulo-corto>`.
-  3. Calcula `dedup_key` como `<source>:<12 primeros caracteres del SHA-256 de
-     la URL canónica>`, con la canonización que describe el contrato.
-  4. Pon `status`: `procesado` si la entrada quedó verificada con su cita;
-     `pendiente` si algo faltó, siempre con `status_note` diciendo qué.
-  5. Escribe `summary` en español, o **omite el campo**: nunca una cadena
-     vacía.
-- **Sale:** las entradas ya conformes al contrato, todavía sin deduplicar.
+### Fases 3 y 4 — Estructurar y deduplicar
 
-### Fase 4 — Deduplicar
+Las dos las ejecuta el recolector en una sola llamada:
 
-- **Entra:** las entradas estructuradas y el snapshot del día anterior.
-- **Pasos:**
-  1. Lee el snapshot anterior y reúne sus `dedup_key`.
-  2. Para cada entrada de hoy, compara su clave con ese conjunto.
-  3. Si la clave ya estaba, **saca la entrada de `items`** y anótala en
-     `dedup.discarded` con `dedup_key`, el `id` de la entrada original en
-     `duplicate_of` y el `reason` por el que volvió a aparecer.
-  4. Comprueba que tampoco haya dos claves iguales dentro del día.
-  5. Rellena `dedup.previous_snapshot` con la fecha de ese snapshot anterior,
-     o `null` si es el primero de todos.
-- **Ojo:** dos publicaciones del mismo tema con URL distinta **no** son
-  duplicados. La clave mide identidad de publicación, no parecido temático.
-- **Sale:** la lista definitiva de `items` y el bloque `dedup`.
+```bash
+python3 tools/recolector.py \
+  --fecha "$DIA" \
+  --fixtures "$TRABAJO" \
+  --anterior data/snapshots/2026-09-15.json \
+  --salida "data/snapshots/$DIA.json" \
+  --resumenes "$TRABAJO/resumenes.json"
+```
+
+Normaliza cada publicación al contrato, calcula `id` y `dedup_key`, compara
+con el día anterior, ordena de lo más reciente a lo más antiguo, cuenta y
+escribe. Con `--dry-run` informa sin escribir; con `--fuente` se limita a una
+fuente; con `--red` lee los feeds del catálogo en vez del directorio de
+trabajo.
+
+Lee el reporte que imprime: cuántas entradas quedaron, cuántas en `pendiente`,
+cuántas se fueron a `dedup.discarded` y qué fuentes dieron aviso. Una entrada
+en `pendiente` o un aviso de fuente caída son información, no un fallo; una
+entrada que el tool no pudo escribir por falta de cita sí exige volver a la
+fuente.
 
 ### Fase 5 — Guardar
 
-- **Entra:** `items`, el bloque `dedup` y la fecha del snapshot.
-- **Pasos:**
-  1. Pide la aprobación de escritura para `data/snapshots/`.
-  2. Envuelve todo en el objeto del snapshot: `version` `"2.0"`,
-     `snapshot_date`, `generated_at` con el instante de cierre en UTC,
-     `item_count` con el número de entradas de `items`, `items` y `dedup`.
-  3. Escribe `data/snapshots/<snapshot_date>.json` con sangría de dos espacios
-     y sin reordenar las claves. Si no quedó ninguna entrada, no escribas el
-     archivo: informa de la pasada fallida.
-  4. Valida y corrige lo que reporte antes de seguir:
+1. Valida y corrige lo que reporte antes de seguir:
 
-     ```bash
-     python3 .codex/skills/recolectar-noticias-ia/scripts/validar_snapshot.py \
-       data/snapshots/<snapshot_date>.json --previous data/snapshots/<día anterior>.json
-     ```
+   ```bash
+   python3 .codex/skills/recolectar-noticias-ia/scripts/validar_snapshot.py \
+     "data/snapshots/$DIA.json" --previous data/snapshots/2026-09-15.json
+   ```
 
-     Sin `--previous` solo el primer día de todos.
-  5. Haz un commit con el mensaje `data: snapshot <snapshot_date>`.
-- **Sale:** el archivo del día, validado y commiteado.
+   Sin `--previous` solo el primer día de todos.
+2. Revisa el archivo contra los criterios de «hecho» de `AGENTS.md`.
+3. Haz un commit con el mensaje `data: snapshot $DIA`.
+4. Borra el directorio de trabajo.
 
 ## Salidas
 
@@ -142,11 +144,13 @@ anterior; si una falla, se aplica su fallback y se sigue.
 - Un commit con ese archivo.
 - Un resumen en la conversación: cuántas entradas quedaron, de qué fuentes,
   cuántas en `pendiente` y por qué, cuántas se descartaron por repetidas y qué
-  fuentes no respondieron.
+  fuentes o subagentes no respondieron.
 
 ## Archivos de la skill
 
 | Archivo | Para qué sirve |
 |---|---|
-| `.codex/skills/recolectar-noticias-ia/references/fuentes.md` | Catálogo de fuentes y el identificador canónico de cada una. |
-| `.codex/skills/recolectar-noticias-ia/scripts/validar_snapshot.py` | Valida un snapshot contra el contrato y, con `--previous`, la deduplicación entre días. Sale con 0 si está bien. |
+| `references/fuentes.md` | Catálogo de fuentes, su identificador canónico y su feed. |
+| `scripts/validar_snapshot.py` | Valida un snapshot contra el contrato y, con `--previous`, la deduplicación entre días. Sale con 0 si está bien. |
+| `tools/recolector.py` | Arma el snapshot: normaliza, calcula claves, deduplica y escribe. |
+| `.codex/agents/` | Los cuatro subagentes que se reparten las fuentes. |

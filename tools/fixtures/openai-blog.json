@@ -1,0 +1,27 @@
+{
+  "source": "openai-blog",
+  "fetched_at": "2026-09-16T21:04:00Z",
+  "items": [
+    {
+      "title": "Structured outputs for the Realtime API",
+      "url": "https://openai.com/index/structured-outputs-realtime-api/",
+      "published_at": "2026-09-16T15:20:00Z",
+      "section": "api",
+      "quote": "Realtime sessions can now be constrained to a JSON schema, so partial audio responses are parsed as they arrive instead of after the turn ends."
+    },
+    {
+      "title": "Model spec update: clarifying refusal behavior",
+      "url": "https://openai.com/index/model-spec-refusal-update/",
+      "published_at": "2026-09-16T11:00:00Z",
+      "section": "safety",
+      "quote": "The updated spec describes when the model declines a request and what it says instead."
+    },
+    {
+      "title": "Project-level usage limits in the API dashboard",
+      "url": "https://openai.com/index/project-level-usage-limits/?utm_source=rss",
+      "published_at": "2026-09-15T09:45:00Z",
+      "section": "product",
+      "quote": "Admins can now set a monthly spending limit per project instead of only at the organization level."
+    }
+  ]
+}
